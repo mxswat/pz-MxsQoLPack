@@ -16,7 +16,7 @@ module MxQoLPack {
         WorldStaticModel = MagazineHerbGround,
     }
 
-    /*obsolete, as it is replaced by WildGarlic2, which is also a Food*/
+    /*Quick hack to make the tooltip appear and to toggle the read flag once is read */
     recipe Nutritionist Trait
     {
         keep [Recipe.GetItemTypes.MortarPestle],
