@@ -1,0 +1,56 @@
+module MxsQoLPack {
+	imports	{
+		Base
+	}
+
+	item NutritionistMag1
+    {
+        DisplayCategory = SkillBook,
+        Weight	=	0.1,
+        Type	=	Literature,
+        DisplayName	=	The Nutritionist Magazine,
+        Icon	=	NutritionistMag1,
+        ReplaceOnUse    =   NutritionistMag1,
+       	StaticModel = Magazine,
+        WorldStaticModel = MagazineHerbGround,
+    }
+
+	item EngineerMag1
+    {
+        DisplayCategory = SkillBook,
+        Weight	=	0.1,
+        Type	=	Literature,
+        DisplayName	=	The Anarchist Cookbook Vol. 1,
+        Icon	=	EngineerMag1,
+        TeachedRecipes  =   Make Flame bomb,
+        ReplaceOnUse    =   EngineerMag1,
+		StaticModel = Magazine,
+        WorldStaticModel = MagazineEngi1Ground,
+    }
+
+	item EngineerMag2
+    {
+        DisplayCategory = SkillBook,
+        Weight	=	0.1,
+        Type	=	Literature,
+        DisplayName	=	The Anarchist Cookbook Vol. 2,
+        Icon	=	EngineerMag1,
+        TeachedRecipes  =   Make Pipe bomb,
+        ReplaceOnUse    =   EngineerMag1,
+		StaticModel = Magazine,
+        WorldStaticModel = MagazineEngi1Ground,
+    }
+
+    item EngineerMag3
+    {
+        DisplayCategory = SkillBook,
+        Weight	=	0.1,
+        Type	=	Literature,
+        DisplayName	=	The Anarchist Cookbook Vol. 3,
+        Icon	=	EngineerMag1,
+        TeachedRecipes  =   Make Aerosol bomb,
+        ReplaceOnUse    =   EngineerMag1,
+		StaticModel = Magazine,
+        WorldStaticModel = MagazineEngi1Ground,
+    }
+}

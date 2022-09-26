@@ -1,0 +1,5 @@
+version=1
+title=Mx's QoL Pack
+description=This is the description of Mx's QoL Pack.
+tags=
+visibility=public
