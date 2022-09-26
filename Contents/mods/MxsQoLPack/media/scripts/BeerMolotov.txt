@@ -1,0 +1,15 @@
+module MxQoLPack {
+	imports	{
+		Base
+	}
+
+    recipe Make Beer Molotov Cocktail
+    {
+       BeerEmpty,
+       RippedSheets/RippedSheetsDirty/DenimStrips/DenimStripsDirty,
+       [Recipe.GetItemTypes.Petrol]=1,
+
+       Result:Molotov,
+       Time:50.0,
+    }
+}
