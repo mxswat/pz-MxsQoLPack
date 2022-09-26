@@ -1,4 +1,4 @@
-module MxsQoLPack {
+module MxQoLPack {
 	imports	{
 		Base
 	}
@@ -10,9 +10,22 @@ module MxsQoLPack {
         Type	=	Literature,
         DisplayName	=	The Nutritionist Magazine,
         Icon	=	NutritionistMag1,
+        TeachedRecipes  =   Nutritionist Trait,
         ReplaceOnUse    =   NutritionistMag1,
        	StaticModel = Magazine,
         WorldStaticModel = MagazineHerbGround,
+    }
+
+    /*obsolete, as it is replaced by WildGarlic2, which is also a Food*/
+    recipe Nutritionist Trait
+    {
+        keep [Recipe.GetItemTypes.MortarPestle],
+        WildGarlic=5,
+
+        Result:WildGarlicCataplasm,
+        Time:60.0,
+        Category:Health,
+		IsHidden:true,
     }
 
 	item EngineerMag1
@@ -36,7 +49,7 @@ module MxsQoLPack {
         DisplayName	=	The Anarchist Cookbook Vol. 2,
         Icon	=	EngineerMag1,
         TeachedRecipes  =   Make Pipe bomb,
-        ReplaceOnUse    =   EngineerMag1,
+        ReplaceOnUse    =   EngineerMag2,
 		StaticModel = Magazine,
         WorldStaticModel = MagazineEngi1Ground,
     }
@@ -49,7 +62,7 @@ module MxsQoLPack {
         DisplayName	=	The Anarchist Cookbook Vol. 3,
         Icon	=	EngineerMag1,
         TeachedRecipes  =   Make Aerosol bomb,
-        ReplaceOnUse    =   EngineerMag1,
+        ReplaceOnUse    =   EngineerMag3,
 		StaticModel = Magazine,
         WorldStaticModel = MagazineEngi1Ground,
     }
