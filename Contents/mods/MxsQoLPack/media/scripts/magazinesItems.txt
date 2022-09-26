@@ -28,7 +28,7 @@ module MxQoLPack {
 		IsHidden:true,
     }
 
-	item EngineerMag1
+	item AnarchistCookbook1
     {
         DisplayCategory = SkillBook,
         Weight	=	0.1,
@@ -41,7 +41,7 @@ module MxQoLPack {
         WorldStaticModel = MagazineEngi1Ground,
     }
 
-	item EngineerMag2
+	item AnarchistCookbook2
     {
         DisplayCategory = SkillBook,
         Weight	=	0.1,
@@ -54,7 +54,7 @@ module MxQoLPack {
         WorldStaticModel = MagazineEngi1Ground,
     }
 
-    item EngineerMag3
+    item AnarchistCookbook3
     {
         DisplayCategory = SkillBook,
         Weight	=	0.1,
