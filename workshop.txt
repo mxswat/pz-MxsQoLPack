@@ -1,10 +1,10 @@
 version=1
+id=2868139768
 title=Mx's QoL Pack
 description=This is the description of Mx's QoL Pack.
 description= - The Nutritionist Magazine > Nutritionist2
 description= - The Anarchist Cookbook Vol. 1 > Make Flame bomb
 description= - The Anarchist Cookbook Vol. 2 > Make Pipe bomb
 description= - The Anarchist Cookbook Vol. 3 > Make Aerosol bomb
-description=
-tags=
+tags=Build 41;Balance;Interface;Items;Literature;Misc;Multiplayer;Realistic;Silly/Fun
 visibility=unlisted
