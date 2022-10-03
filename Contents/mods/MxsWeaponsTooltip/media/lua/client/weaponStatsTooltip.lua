@@ -18,7 +18,7 @@ function getARGB(color)
     }
 end
 
-local function injectTooltip(stats, self)
+local function injectTooltip(stats, self, compared)
     local fontSize = getCore():getOptionTooltipFont();
     local tooltipHeight = self.tooltip:getHeight();
     local height = fontConfig[fontSize].y * (#stats + 1)
@@ -34,20 +34,15 @@ local function injectTooltip(stats, self)
     local marginBase = 40
     local marginCalc = 90
     self.tooltip:DrawText(self.tooltip:getFont(), "Stats", x + marginBase, y, 1, 1, 0.8, borderARGB.a);
-    -- self.tooltip:DrawText(self.tooltip:getFont(), "Calc", x + marginCalc, y, 1, 1, 0.8, borderARGB.a);
-    for _, tuple in ipairs(stats) do
-        y = y + fontConfig[fontSize].y
-        self.tooltip:DrawText(self.tooltip:getFont(), tuple[1] .. ":", x, y, 1, 1, 0.8, 1);
-        self.tooltip:DrawText(self.tooltip:getFont(), tostring(tuple[2]), x + marginBase, y, 1, 1, 1, 1);
-        -- self.tooltip:DrawText(self.tooltip:getFont(), tostring(tuple[3]), x + marginCalc, y, 1, 1, 1, 1);
+    if compared then
+        self.tooltip:DrawText(self.tooltip:getFont(), compared, x + marginCalc, y, 1, 1, 0.8, borderARGB.a);
     end
-end
-
--- From java\characters\IsoPlayer.java:calculateCritChance()
-function GetFirearmsCHC(item)
-    local CHC = 0
-
-    return CHC
+    for _, statsRow in ipairs(stats) do
+        y = y + fontConfig[fontSize].y
+        self.tooltip:DrawText(self.tooltip:getFont(), statsRow[1] .. ":", x, y, 1, 1, 0.8, 1);
+        self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[2]), x + marginBase, y, 1, 1, 1, 1);
+        self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[3] or ''), x + marginCalc, y, 1, 1, 1, 1);
+    end
 end
 
 -- 10 is minimum -- java\characters\IsoPlayer.java:calculateCritChance
@@ -68,15 +63,12 @@ function GetFirearmsStats(item)
     local hitChance         = item:getHitChance()
     local critModifier      = item:getAimingPerkCritModifier() or 0
     local hitChanceModifier = item:getAimingPerkHitChanceModifier()
-    -- 
+
     local CHCCalc     = math.min(critChance + (critModifier * perkLevel), CHCMax)
     local damageStat  = tofixed(minDamage) .. " - " .. tofixed(maxDamage)
     local critDmgStat = (critDmg * 100) .. '%'
     local accStat     = math.min(hitChance + (hitChanceModifier * perkLevel), ACCMax)
     local range       = tofixed(minRange) .. " - " .. tofixed(maxRange)
-
-    local selectedLoot = GetFirst(getPlayerLoot(0).inventoryPane.selected)
-    local selectedInventory = GetFirst(getPlayerInventory(0).inventoryPane.selected)
 
     return {
         { "DMG", damageStat },
@@ -90,8 +82,19 @@ end
 
 local function injectFireArmsStats(item, self)
     local stats = GetFirearmsStats(item)
+    local compareWeapon = GetSelectedWeapon()
+    if not compareWeapon or compareWeapon == item then
+        injectTooltip(stats, self)
+        return
+    end
 
-    injectTooltip(stats, self)
+    local CompareStats = GetFirearmsStats(compareWeapon)
+
+    for i, stat in ipairs(stats) do
+        stat[3] = CompareStats[i][2]
+    end
+
+    injectTooltip(stats, self, compareWeapon:getDisplayName())
 end
 
 local old_ISToolTipInv_render = ISToolTipInv.render
@@ -110,14 +113,25 @@ function ISToolTipInv:render()
     old_ISToolTipInv_render(self)
 end
 
--- NOTE 1 -- java\ai\states\SwipeStatePlayer.java
--- Games limits accuracy to 95%
-
-function GetFirst(selected)
-    for k, v in pairs(selected) do
-        if k and v then
-            return selected
+function GetItem(selected)
+    for _, value in pairs(selected) do
+        if value and value.items then
+            for _, item in pairs(value.items) do
+                return item
+            end
         end
+    end
+
+    return nil
+end
+
+function GetSelectedWeapon()
+    local selectedLoot = GetItem(getPlayerLoot(0).inventoryPane.selected)
+    local selectedInventory = GetItem(getPlayerInventory(0).inventoryPane.selected)
+    local weapon = selectedLoot or selectedInventory
+
+    if weapon and weapon:IsWeapon() then
+        return weapon
     end
 
     return nil
