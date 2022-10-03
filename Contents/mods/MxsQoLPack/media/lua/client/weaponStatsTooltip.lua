@@ -55,31 +55,28 @@ local CHCMax = 90
 -- java\ai\states\SwipeStatePlayer.java:CalcHitChance
 local ACCMax = 95
 
-local function getFirearmsStats(item)
-    local minDamage            = item:getMinDamage() or 0
-    local maxDamage            = item:getMaxDamage() or 0
-    local minRange             = item:getMinRange()
-    local maxRange             = item:getMaxRange()
-    local critChance           = item:getCriticalChance() or 0
-    local critDmg              = item:getCritDmgMultiplier()
-    local maxHit               = item:getMaxHitCount()
-    local condition            = item:getCondition()
-    local conditionMax         = item:getConditionMax()
-    local conditionLowerChance = item:getConditionLowerChance()
-    local weaponLevel          = getPlayer():getPerkLevel(Perks.Aiming) or 0
-    local hitChance            = item:getHitChance()
-    local aimingTime           = item:getAimingTime()
-    local reloadTime           = item:getReloadTime()
-    local recoilDelay          = item:getRecoilDelay()
-    local critModifier         = item:getAimingPerkCritModifier() or 0
-    local hitChanceModifier    = item:getAimingPerkHitChanceModifier()
-    local rangeModifier        = item:getAimingPerkRangeModifier()
-
-    local CHCCalc     = math.min(critChance + (critModifier * weaponLevel), CHCMax)
+function GetFirearmsStats(item)
+    local player            = getPlayer()
+    local minDamage         = item:getMinDamage() or 0
+    local maxDamage         = item:getMaxDamage() or 0
+    local minRange          = item:getMinRange()
+    local maxRange          = item:getMaxRange()
+    local critChance        = item:getCriticalChance() or 0
+    local critDmg           = item:getCritDmgMultiplier()
+    local maxHit            = item:getMaxHitCount()
+    local perkLevel         = player:getPerkLevel(Perks.Aiming) or 0
+    local hitChance         = item:getHitChance()
+    local critModifier      = item:getAimingPerkCritModifier() or 0
+    local hitChanceModifier = item:getAimingPerkHitChanceModifier()
+    -- 
+    local CHCCalc     = math.min(critChance + (critModifier * perkLevel), CHCMax)
     local damageStat  = tofixed(minDamage) .. " - " .. tofixed(maxDamage)
     local critDmgStat = (critDmg * 100) .. '%'
-    local accStat     = math.min(hitChance + (hitChanceModifier * weaponLevel), ACCMax)
+    local accStat     = math.min(hitChance + (hitChanceModifier * perkLevel), ACCMax)
     local range       = tofixed(minRange) .. " - " .. tofixed(maxRange)
+
+    local selectedLoot = GetFirst(getPlayerLoot(0).inventoryPane.selected)
+    local selectedInventory = GetFirst(getPlayerInventory(0).inventoryPane.selected)
 
     return {
         { "DMG", damageStat },
@@ -89,6 +86,12 @@ local function getFirearmsStats(item)
         { "CHD", critDmgStat },
         { "TRG", maxHit },
     }
+end
+
+local function injectFireArmsStats(item, self)
+    local stats = GetFirearmsStats(item)
+
+    injectTooltip(stats, self)
 end
 
 local old_ISToolTipInv_render = ISToolTipInv.render
@@ -102,11 +105,20 @@ function ISToolTipInv:render()
         return
     end
     if item:getSubCategory() == "Firearm" then
-        local stats = getFirearmsStats(item)
-        injectTooltip(stats, self)
+        injectFireArmsStats(item, self)
     end
     old_ISToolTipInv_render(self)
 end
 
 -- NOTE 1 -- java\ai\states\SwipeStatePlayer.java
 -- Games limits accuracy to 95%
+
+function GetFirst(selected)
+    for k, v in pairs(selected) do
+        if k and v then
+            return selected
+        end
+    end
+
+    return nil
+end
