@@ -1,21 +1,14 @@
+require "WSTUtils"
+
+local iconTexture = getTexture("media/ui/Panel_Icon_Gear.png");
 local fontConfig = {
-    Small  = { y = 15 },
-    Medium = { y = 20 },
-    Large  = { y = 20 },
+    Small  = { y = 15, iconY = 2 },
+    Medium = { y = 20, iconY = 4 },
+    Large  = { y = 20, iconY = 6 },
 }
 
 local function tofixed(v)
     return string.format("%g", string.format("%.1f", v))
-end
-
----@diagnostic disable-next-line: lowercase-global
-function getARGB(color)
-    return {
-        a = color.a,
-        r = color.r,
-        g = color.g,
-        b = color.b
-    }
 end
 
 local function injectTooltip(stats, self, compared)
@@ -25,8 +18,8 @@ local function injectTooltip(stats, self, compared)
     self:setY(self.tooltip:getY() + tooltipHeight);
     self:setHeight(height);
     local hDiff = self.height + 9
-    local bgARGB = getARGB(self.backgroundColor)
-    local borderARGB = getARGB(self.borderColor)
+    local bgARGB = GetARGB(self.backgroundColor)
+    local borderARGB = GetARGB(self.borderColor)
     self:drawRect(0, 0, self.width, hDiff, bgARGB.a, bgARGB.r, bgARGB.g, bgARGB.b);
     self:drawRectBorder(0, 0, self.width, hDiff, borderARGB.a, borderARGB.r, borderARGB.g, borderARGB.b);
     local x = 5
@@ -37,8 +30,10 @@ local function injectTooltip(stats, self, compared)
     if compared then
         self.tooltip:DrawText(self.tooltip:getFont(), compared, x + marginCalc, y, 1, 1, 0.8, borderARGB.a);
     end
+    -- x = x - 10
     for _, statsRow in ipairs(stats) do
         y = y + fontConfig[fontSize].y
+        -- self.tooltip:DrawTextureScaledAspect(iconTexture, x - 10, y + fontConfig[fontSize].iconY, 10, 10, 1, 1, 1, 1)
         self.tooltip:DrawText(self.tooltip:getFont(), statsRow[1] .. ":", x, y, 1, 1, 0.8, 1);
         self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[2]), x + marginBase, y, 1, 1, 1, 1);
         self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[3] or ''), x + marginCalc, y, 1, 1, 1, 1);
@@ -69,6 +64,8 @@ function GetFirearmsStats(item)
     local critDmgStat = (critDmg * 100) .. '%'
     local accStat     = math.min(hitChance + (hitChanceModifier * perkLevel), ACCMax)
     local range       = tofixed(minRange) .. " - " .. tofixed(maxRange)
+    local soundVolume = item:getSoundVolume()
+    local soundRadius = item:getSoundRadius()
 
     return {
         { "DMG", damageStat },
@@ -77,12 +74,14 @@ function GetFirearmsStats(item)
         { "CHC", tofixed(CHCCalc) .. '%' },
         { "CHD", critDmgStat },
         { "TRG", maxHit },
+        { "SNR", soundRadius },
+        { "SNV", soundVolume },
     }
 end
 
 local function injectFireArmsStats(item, self)
     local stats = GetFirearmsStats(item)
-    local compareWeapon = GetSelectedWeapon()
+    local compareWeapon = GetPlayerINVSelectedWeapon()
     if not compareWeapon or compareWeapon == item then
         injectTooltip(stats, self)
         return
@@ -120,18 +119,6 @@ function GetItem(selected)
                 return item
             end
         end
-    end
-
-    return nil
-end
-
-function GetSelectedWeapon()
-    local selectedLoot = GetItem(getPlayerLoot(0).inventoryPane.selected)
-    local selectedInventory = GetItem(getPlayerInventory(0).inventoryPane.selected)
-    local weapon = selectedLoot or selectedInventory
-
-    if weapon and weapon:IsWeapon() then
-        return weapon
     end
 
     return nil
