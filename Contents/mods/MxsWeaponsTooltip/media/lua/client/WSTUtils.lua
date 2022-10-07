@@ -18,3 +18,19 @@ function GetPlayerINVSelectedWeapon()
 
     return nil
 end
+
+function GetItem(selected)
+    for _, value in pairs(selected) do
+        if value and value.items then
+            for _, item in pairs(value.items) do
+                return item
+            end
+        end
+    end
+
+    return nil
+end
+
+function Tofixed(v)
+    return string.format("%g", string.format("%.1f", v))
+end

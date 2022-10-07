@@ -7,10 +7,6 @@ local fontConfig = {
     Large  = { y = 20, iconY = 6 },
 }
 
-local function tofixed(v)
-    return string.format("%g", string.format("%.1f", v))
-end
-
 local function injectTooltip(stats, self, compared)
     local fontSize = getCore():getOptionTooltipFont();
     local tooltipHeight = self.tooltip:getHeight();
@@ -24,19 +20,19 @@ local function injectTooltip(stats, self, compared)
     self:drawRectBorder(0, 0, self.width, hDiff, borderARGB.a, borderARGB.r, borderARGB.g, borderARGB.b);
     local x = 5
     local y = tooltipHeight + 5
-    local marginBase = 40
-    local marginCalc = 90
-    self.tooltip:DrawText(self.tooltip:getFont(), "Stats", x + marginBase, y, 1, 1, 0.8, borderARGB.a);
+    local marginCurrent = 40
+    local marginCompare = 90
+    self.tooltip:DrawText(self.tooltip:getFont(), "Stats", x + marginCurrent, y, 1, 1, 0.8, borderARGB.a);
     if compared then
-        self.tooltip:DrawText(self.tooltip:getFont(), compared, x + marginCalc, y, 1, 1, 0.8, borderARGB.a);
+        self.tooltip:DrawText(self.tooltip:getFont(), compared, x + marginCompare, y, 1, 1, 0.8, borderARGB.a);
     end
-    -- x = x - 10
+
     for _, statsRow in ipairs(stats) do
         y = y + fontConfig[fontSize].y
         -- self.tooltip:DrawTextureScaledAspect(iconTexture, x - 10, y + fontConfig[fontSize].iconY, 10, 10, 1, 1, 1, 1)
         self.tooltip:DrawText(self.tooltip:getFont(), statsRow[1] .. ":", x, y, 1, 1, 0.8, 1);
-        self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[2]), x + marginBase, y, 1, 1, 1, 1);
-        self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[3] or ''), x + marginCalc, y, 1, 1, 1, 1);
+        self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[2]), x + marginCurrent, y, 1, 1, 1, 1);
+        self.tooltip:DrawText(self.tooltip:getFont(), tostring(statsRow[3] or ''), x + marginCompare, y, 1, 1, 1, 1);
     end
 end
 
@@ -60,10 +56,10 @@ function GetFirearmsStats(item)
     local hitChanceModifier = item:getAimingPerkHitChanceModifier()
 
     local CHCCalc     = math.min(critChance + (critModifier * perkLevel), CHCMax)
-    local damageStat  = tofixed(minDamage) .. " - " .. tofixed(maxDamage)
+    local damageStat  = Tofixed(minDamage) .. " - " .. Tofixed(maxDamage)
     local critDmgStat = (critDmg * 100) .. '%'
     local accStat     = math.min(hitChance + (hitChanceModifier * perkLevel), ACCMax)
-    local range       = tofixed(minRange) .. " - " .. tofixed(maxRange)
+    local range       = Tofixed(minRange) .. " - " .. Tofixed(maxRange)
     local soundVolume = item:getSoundVolume()
     local soundRadius = item:getSoundRadius()
 
@@ -71,7 +67,7 @@ function GetFirearmsStats(item)
         { "DMG", damageStat },
         { "ACC", accStat .. '%' },
         { "RAN", range },
-        { "CHC", tofixed(CHCCalc) .. '%' },
+        { "CHC", Tofixed(CHCCalc) .. '%' },
         { "CHD", critDmgStat },
         { "TRG", maxHit },
         { "SNR", soundRadius },
@@ -110,16 +106,4 @@ function ISToolTipInv:render()
         injectFireArmsStats(item, self)
     end
     old_ISToolTipInv_render(self)
-end
-
-function GetItem(selected)
-    for _, value in pairs(selected) do
-        if value and value.items then
-            for _, item in pairs(value.items) do
-                return item
-            end
-        end
-    end
-
-    return nil
 end
