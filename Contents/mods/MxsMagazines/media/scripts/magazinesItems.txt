@@ -36,7 +36,7 @@ module MxQoLPack {
         DisplayName	=	The Anarchist Cookbook Vol. 1,
         Icon	=	EngineerMag1,
         TeachedRecipes  =   Make Flame bomb,
-        ReplaceOnUse    =   EngineerMag1,
+        ReplaceOnUse    =   AnarchistCookbook1,
 		StaticModel = Magazine,
         WorldStaticModel = MagazineEngi1Ground,
     }
@@ -49,7 +49,7 @@ module MxQoLPack {
         DisplayName	=	The Anarchist Cookbook Vol. 2,
         Icon	=	EngineerMag2,
         TeachedRecipes  =   Make Pipe bomb,
-        ReplaceOnUse    =   EngineerMag2,
+        ReplaceOnUse    =   AnarchistCookbook2,
 		StaticModel = Magazine,
         WorldStaticModel = MagazineEngi1Ground,
     }
@@ -62,7 +62,7 @@ module MxQoLPack {
         DisplayName	=	The Anarchist Cookbook Vol. 3,
         Icon	=	EngineerMag3,
         TeachedRecipes  =   Make Aerosol bomb,
-        ReplaceOnUse    =   EngineerMag3,
+        ReplaceOnUse    =   AnarchistCookbook3,
 		StaticModel = Magazine,
         WorldStaticModel = MagazineEngi1Ground,
     }
